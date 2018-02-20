@@ -7,8 +7,16 @@
   <title>Piano JS</title>
   <link rel="stylesheet" href="./dist/app.styles.css">
 </head>
-
 <body>
+  <div class="piano">
+    <ul class="keys">
+      <script id="key-template" type="text/template">
+        {{#keys}}
+          <li class="{{ class }}">{{ note }}</li>
+        {{/keys}}
+      </script>
+    </ul>
+  </div>
   <script src="./dist/app.bundle.js"></script>
 </body>
 </html>

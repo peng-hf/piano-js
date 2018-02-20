@@ -15,7 +15,8 @@ let config = {
   devtool: dev ? 'eval-source-map' : false, // enhance the debugging process
   resolve: {
     alias: {
-      '@': path.resolve('src')
+      '@': path.resolve('src'),
+      '@css': path.resolve('assets/styles')
     }
   },
   module: {
