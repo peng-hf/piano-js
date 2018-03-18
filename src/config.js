@@ -1,7 +1,7 @@
 // Piano config
 
 const config = {
-  nbOctavesDisplay: 2 // Number of octaves to display (maximum 7)
+  initialNbOctaves: 3 // Initial number of octaves displayed (maximum 7)
 }
 
 export default config

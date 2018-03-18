@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: #000000;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top, #434343, #000000) no-repeat center center fixed;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #434343, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.piano {
+  display: flex;
+  margin: 0 50px;
+  height: 280px;
+}
+
+.piano__key {
+  flex-grow: 1;
+  position: relative;
+}
+
+.piano__key--white {
+  background: white;
+  border-radius: 0 0 4px 4px;
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 0 3px 1px;
+  box-shadow: 0px 7px 5px 0px rgba(0,0,0,0.75);
+  height: 100%;
+}
+
+.piano__key--black {
+  background-color: black;
+  height: 60%;
+  width: 50%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  transform: translateX(50%);
+}

@@ -2,6 +2,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
 const UglifyJSPlugin = require('uglify-js-plugin')
 const dev = process.env.NODE_ENV === 'dev'
+const webpack = require('webpack')
 
 let config = {
   entry: {
@@ -58,11 +59,13 @@ let config = {
     new ExtractTextPlugin({
       filename: '[name].styles.css',
       disable: dev // disable extract css to a file on dev mode
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
     contentBase: __dirname,
-    overlay: true // show errors in the console term
+    overlay: true, // show errors in the console term
+    hot: true
   }
 }
 
