@@ -10,22 +10,30 @@ const Piano = {
       octaves.sort()
       return octaves.reduce((acc, octNb) => acc.concat(CONSTANT.OCTAVES_BY_NUMBER[octNb]), [])
     })()
-    // Cache DOM
+    this.isLeftClicked = false
     this.$piano = document.querySelector('#piano')
   },
-  bindEvents () {},
-  renderKeys () {
+  bindEvents () {
+    this.$piano.addEventListener('click', function (evt) {
+      console.log('Note', evt.target.dataset.note)
+      var audio = document.createElement('audio')
+      audio.src = `./assets/sounds/${evt.target.dataset.note}.mp3`
+      audio.play()
+    })
+  },
+  populateKeys () {
     var $keysFrag = document.createDocumentFragment()
     var $previousKey
     this.keys.forEach(key => {
       let $key = document.createElement('div')
-      if ($previousKey && key.note.includes('s')) {
-        $key.classList.add('piano__key--black')
+      $key.dataset.note = key.note
+      if ($previousKey && key.note.includes('#')) {
+        $key.classList.add('key__black')
         $previousKey.appendChild($key)
       } else {
         let $wrapperKey = document.createElement('div')
-        $wrapperKey.classList.add('piano__key')
-        $key.classList.add('piano__key--white')
+        $wrapperKey.classList.add('key')
+        $key.classList.add('key__white')
         $wrapperKey.appendChild($key)
         $keysFrag.appendChild($wrapperKey)
         $previousKey = $wrapperKey
@@ -36,7 +44,7 @@ const Piano = {
   init () {
     this.data()
     this.bindEvents()
-    this.renderKeys()
+    this.populateKeys()
   }
 }
 

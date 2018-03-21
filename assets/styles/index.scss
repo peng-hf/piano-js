@@ -11,7 +11,6 @@ html, body {
 
 body {
   background: #000000;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to top, #434343, #000000) no-repeat center center fixed;  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to top, #434343, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
@@ -21,23 +20,30 @@ body {
   height: 280px;
 }
 
-.piano__key {
+.piano .key {
   flex-grow: 1;
   position: relative;
 }
 
-.piano__key--white {
-  background: white;
+.piano .key__white {
+  background: #fff;
   border-radius: 0 0 4px 4px;
   border-color: #ccc;
   border-style: solid;
   border-width: 0 3px 1px;
-  box-shadow: 0px 7px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 7px 5px 0px rgba(0, 0, 0, .75);
   height: 100%;
 }
 
-.piano__key--black {
-  background-color: black;
+.piano .key__white:active {
+  height: 98%;
+  box-shadow: inset 0px -2px 7px 1px rgba(0, 0, 0, .4);
+  border-color: #fff;
+}
+
+.piano .key__black {
+  background: #333;
+  background: linear-gradient(-20deg,#333,#000,#333);
   height: 60%;
   width: 50%;
   position: absolute;
@@ -45,4 +51,12 @@ body {
   right: 0;
   z-index: 1;
   transform: translateX(50%);
+  border-width: 2px 4px 15px;
+  border-style: solid;
+  border-color: #666 #222 #111 #555;
+  box-shadow: inset 0px -1px 2px rgba(255, 255, 255, .4), 0 2px 3px rgba(0, 0, 0, .4)
+}
+
+.piano .key__black:active {
+  border-bottom-width: 5px;
 }

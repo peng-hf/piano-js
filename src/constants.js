@@ -1,36 +1,35 @@
-// Note: Standard piano contains 7 octaves from 1 to 7 (extension 0 and 8 are not included)
-const NB_MAX_OCTAVES = 7
+const OCTAVE_RANGE = [2, 6]
 
 function getOctavesByNumber () {
   // Octaves generation function
   const OCTAVE_TEMPLATE = [
     { note: 'C' },
-    { note: 'Cs' },
+    { note: 'C#' },
     { note: 'D' },
-    { note: 'Ds' },
+    { note: 'D#' },
     { note: 'E' },
     { note: 'F' },
-    { note: 'Fs' },
+    { note: 'F#' },
     { note: 'G' },
-    { note: 'Gs' },
+    { note: 'G#' },
     { note: 'A' },
-    { note: 'As' },
+    { note: 'A#' },
     { note: 'B' }
   ]
   var res = {}
 
-  for (let octaveNb = 1; octaveNb <= NB_MAX_OCTAVES; ++octaveNb) {
+  for (let octaveNb = OCTAVE_RANGE[0]; octaveNb <= OCTAVE_RANGE[1]; ++octaveNb) {
     res[octaveNb] = OCTAVE_TEMPLATE.map(pianoKey => ({
-      note: octaveNb + pianoKey.note
+      note: pianoKey.note + octaveNb
     }))
   }
   return res
 }
 
 const CONSTANT = {
-  NB_MAX_OCTAVES,
+  NB_MAX_OCTAVES: OCTAVE_RANGE[1] - OCTAVE_RANGE[0],
   OCTAVES_BY_NUMBER: getOctavesByNumber(),
-  OCTAVES_ORDER: [4, 5, 3, 6, 2, 7, 1] // Octaves display order by number
+  OCTAVES_ORDER: [4, 5, 3, 6, 2] // Octaves display order by number
 }
 
 export default CONSTANT
