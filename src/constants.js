@@ -4,16 +4,16 @@ function getOctavesByNumber () {
   // Octaves generation function
   const OCTAVE_TEMPLATE = [
     { note: 'C' },
-    { note: 'C#' },
+    { note: 'Cs' },
     { note: 'D' },
-    { note: 'D#' },
+    { note: 'Ds' },
     { note: 'E' },
     { note: 'F' },
-    { note: 'F#' },
+    { note: 'Fs' },
     { note: 'G' },
-    { note: 'G#' },
+    { note: 'Gs' },
     { note: 'A' },
-    { note: 'A#' },
+    { note: 'As' },
     { note: 'B' }
   ]
   var res = {}
