@@ -29,7 +29,12 @@ function getOctavesByNumber () {
 const CONSTANT = {
   NB_MAX_OCTAVES: OCTAVE_RANGE[1] - OCTAVE_RANGE[0],
   OCTAVES_BY_NUMBER: getOctavesByNumber(),
-  OCTAVES_ORDER: [4, 5, 3, 6, 2] // Octaves display order by number
+  OCTAVES_ORDER: [4, 5, 3, 6, 2], // Octaves display order by number
+  RENDER_ACTION: {
+    INIT: 'init',
+    ADD_OCTAVE: 'add_octave',
+    REMOVE_OCTAVE: 'remove_octave'
+  }
 }
 
 export default CONSTANT
