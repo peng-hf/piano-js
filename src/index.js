@@ -2,7 +2,13 @@ import '@css/index.scss'
 import CONSTANT from '@/constants'
 import pianoConfig from '@/config'
 
-const { RENDER_ACTION, NB_MAX_OCTAVES, OCTAVES_BY_NUMBER, OCTAVES_ORDER } = CONSTANT
+const {
+  RENDER_ACTION,
+  MIN_OCTAVE,
+  MAX_OCTAVE,
+  OCTAVES_BY_NUMBER,
+  OCTAVES_ORDER
+} = CONSTANT
 
 const Piano = {
   data () {
@@ -21,29 +27,27 @@ const Piano = {
     this.renderKeys(RENDER_ACTION.INIT)
     setTimeout(() => {
       this.renderKeys(RENDER_ACTION.ADD_OCTAVE)
-    }, 2000)
+      setTimeout(() => {
+        this.renderKeys(RENDER_ACTION.REMOVE_OCTAVE)
+      }, 1000)
+    }, 1000)
   },
 
   renderKeys (action) {
     switch (action) {
       case RENDER_ACTION.INIT:
-        this.initRender()
+        this.initRenderAction()
         break
       case RENDER_ACTION.ADD_OCTAVE:
-        this.addOctaveRender()
+        this.addOctaveRenderAction()
+        break
+      case RENDER_ACTION.REMOVE_OCTAVE:
+        this.removeOctaveRenderAction()
         break
     }
   },
-  initRender () {
-    // Generate keys and add to DOM
-    const keys = (function () {
-      const octaves = OCTAVES_ORDER.slice(0, pianoConfig.initialNbOctaves)
-      octaves.sort()
-      return octaves.reduce((acc, octNb) => acc.concat(OCTAVES_BY_NUMBER[octNb]), [])
-    })()
-    this.$piano.appendChild(this.generateKeysFrag(keys))
-  },
-  generateKeysFrag (keys) {
+  insertKeys (keys, before = false) {
+    // Helper function to insert keys to the DOM
     var $keysFrag = document.createDocumentFragment()
     var $previousKey
     keys.forEach(key => {
@@ -61,14 +65,40 @@ const Piano = {
         $previousKey = $wrapperKey
       }
     })
-    return $keysFrag
+    if (before) {
+      this.$piano.insertBefore($keysFrag, this.$piano.childNodes[0])
+    } else {
+      this.$piano.appendChild($keysFrag)
+    }
   },
-  addOctaveRender () {
-    if (this.curNbOctaves < NB_MAX_OCTAVES) {
+  initRenderAction () {
+    // Generate keys and add to DOM
+    const keys = (function () {
+      const octaves = OCTAVES_ORDER.slice(0, pianoConfig.initialNbOctaves)
+      octaves.sort()
+      return octaves.reduce((acc, octNb) => acc.concat(OCTAVES_BY_NUMBER[octNb]), [])
+    })()
+    this.insertKeys(keys)
+  },
+  addOctaveRenderAction () {
+    if (this.curNbOctaves < MAX_OCTAVE) {
+      // Retrieved minimum current octave displayed
+      const minCurOctaveNb = Math.min.apply(null, OCTAVES_ORDER.slice(0, this.curNbOctaves))
+      // Insert before if new octave to add if lower than the minimum current octave displayed
+      const insertBefore = OCTAVES_ORDER[this.curNbOctaves] < minCurOctaveNb
       this.curNbOctaves++
-      // Keys to add
       const keys = OCTAVES_BY_NUMBER[this.curNbOctaves]
-      this.$piano.appendChild(this.generateKeysFrag(keys))
+      this.insertKeys(keys, insertBefore)
+    } else {
+      console.error('Number of octaves rendered reached')
+    }
+  },
+  removeOctaveRenderAction () {
+    if (this.curNbOctaves > MIN_OCTAVE) {
+      const octaveNb = OCTAVES_ORDER[this.curNbOctaves] // octave number to remove
+      console.log('octave to remove', octaveNb)
+      console.log('current octave number', this.curNbOctaves)
+      this.curNbOctaves--
     }
   },
   playNote (note) {
