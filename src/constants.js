@@ -1,7 +1,7 @@
-const MIN_OCTAVE = 2
-const MAX_OCTAVE = 6
+const MIN_OCTAVE_NO = 2
+const MAX_OCTAVE_NO = 6
 
-function getOctavesByNumber () {
+function getOctavesByNo () {
   // Octaves generation function
   const OCTAVE_TEMPLATE = [
     { note: 'C' },
@@ -19,19 +19,18 @@ function getOctavesByNumber () {
   ]
   var res = {}
 
-  for (let octaveNb = MIN_OCTAVE; octaveNb <= MAX_OCTAVE; ++octaveNb) {
-    res[octaveNb] = OCTAVE_TEMPLATE.map(pianoKey => ({
-      note: pianoKey.note + octaveNb
+  for (let octaveNo = MIN_OCTAVE_NO; octaveNo <= MAX_OCTAVE_NO; ++octaveNo) {
+    res[octaveNo] = OCTAVE_TEMPLATE.map(pianoKey => ({
+      note: pianoKey.note + octaveNo
     }))
   }
   return res
 }
 
 const CONSTANT = {
-  MAX_OCTAVE,
-  MIN_OCTAVE,
-  OCTAVES_BY_NUMBER: getOctavesByNumber(),
-  OCTAVES_ORDER: [4, 5, 3, 6, 2], // Octaves display order by number
+  NB_MAX_OCTAVES: MAX_OCTAVE_NO - MIN_OCTAVE_NO + 1,
+  OCTAVES_BY_NO: getOctavesByNo(),
+  OCTAVES_ORDER: [4, 5, 3, 6, 2], // Octaves display order by number (no)
   RENDER_ACTION: {
     INIT: 'init',
     ADD_OCTAVE: 'add_octave',

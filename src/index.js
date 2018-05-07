@@ -2,18 +2,19 @@ import '@css/index.scss'
 import CONSTANT from '@/constants'
 import pianoConfig from '@/config'
 
+// Nb (count) != no (numero)
+
 const {
   RENDER_ACTION,
-  MIN_OCTAVE,
-  MAX_OCTAVE,
-  OCTAVES_BY_NUMBER,
+  NB_MAX_OCTAVES,
+  OCTAVES_BY_NO,
   OCTAVES_ORDER
 } = CONSTANT
 
 const Piano = {
   data () {
     this.isMouseDown = false
-    this.curNbOctaves = pianoConfig.initialNbOctaves
+    this.curNbOctaves = pianoConfig.initialNbOctaves // Current number of octaves displayed
     this.$piano = document.querySelector('#piano') // DOM Caching
   },
   bindEvents () {
@@ -25,12 +26,6 @@ const Piano = {
     this.data()
     this.bindEvents()
     this.renderKeys(RENDER_ACTION.INIT)
-    setTimeout(() => {
-      this.renderKeys(RENDER_ACTION.ADD_OCTAVE)
-      setTimeout(() => {
-        this.renderKeys(RENDER_ACTION.REMOVE_OCTAVE)
-      }, 1000)
-    }, 1000)
   },
 
   renderKeys (action) {
@@ -73,31 +68,34 @@ const Piano = {
   },
   initRenderAction () {
     // Generate keys and add to DOM
-    const keys = (function () {
-      const octaves = OCTAVES_ORDER.slice(0, pianoConfig.initialNbOctaves)
+    const keys = (function () { // arrow function can also be an option to prevent binding current context
+      const octaves = OCTAVES_ORDER.slice(0, this.curNbOctaves)
       octaves.sort()
-      return octaves.reduce((acc, octNb) => acc.concat(OCTAVES_BY_NUMBER[octNb]), [])
-    })()
+      return octaves.reduce((acc, octNo) => acc.concat(OCTAVES_BY_NO[octNo]), [])
+    }.bind(this))()
     this.insertKeys(keys)
   },
   addOctaveRenderAction () {
-    if (this.curNbOctaves < MAX_OCTAVE) {
-      // Retrieved minimum current octave displayed
-      const minCurOctaveNb = Math.min.apply(null, OCTAVES_ORDER.slice(0, this.curNbOctaves))
-      // Insert before if new octave to add if lower than the minimum current octave displayed
-      const insertBefore = OCTAVES_ORDER[this.curNbOctaves] < minCurOctaveNb
-      this.curNbOctaves++
-      const keys = OCTAVES_BY_NUMBER[this.curNbOctaves]
+    if (this.curNbOctaves < NB_MAX_OCTAVES) {
+      // Retrieved minimum current octave no displayed
+      const minCurOctaveNo = Math.min.apply(null, OCTAVES_ORDER.slice(0, this.curNbOctaves))
+      // New octave number (no) to add
+      const newOctaveNo = OCTAVES_ORDER[this.curNbOctaves]
+      // Insert before if new octave to add is lower than the minimum current octave displayed
+      const insertBefore = newOctaveNo < minCurOctaveNo
+      console.log('insert before', insertBefore)
+      const keys = OCTAVES_BY_NO[newOctaveNo]
       this.insertKeys(keys, insertBefore)
+      this.curNbOctaves++
     } else {
       console.error('Number of octaves rendered reached')
     }
   },
   removeOctaveRenderAction () {
-    if (this.curNbOctaves > MIN_OCTAVE) {
-      const octaveNb = OCTAVES_ORDER[this.curNbOctaves] // octave number to remove
-      console.log('octave to remove', octaveNb)
-      console.log('current octave number', this.curNbOctaves)
+    if (this.curNbOctaves > 0) {
+      const octaveNoRemove = OCTAVES_ORDER[this.curNbOctaves - 1] // octave number (no) to remove
+      console.log('octave to remove', octaveNoRemove)
+      console.log('current number of octave', this.curNbOctaves)
       this.curNbOctaves--
     }
   },
