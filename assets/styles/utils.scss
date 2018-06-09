@@ -1,5 +1,4 @@
-$piano-color: #1c1c1c;
+$piano-main-color: #353535;
+$piano-border-color: #101010;
 
-@mixin piano-shadow {
-  box-shadow: 2px 0px 19px 0px rgba(0, 0, 0, .75);
-}
+// add piano shadow
