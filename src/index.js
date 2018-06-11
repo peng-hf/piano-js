@@ -18,9 +18,16 @@ const Piano = {
     this.$piano = document.querySelector('#piano') // DOM Caching
   },
   bindEvents () {
+    /* Keybaords events */
     ['mousedown', 'mouseup', 'mouseover', 'mouseout'].forEach(evtName => {
       this.$piano.addEventListener(evtName, this.mouseHandler.bind(this))
     })
+
+    /* Buttons events */
+    const $btnAddOctave = document.getElementById('btn-add-octave')
+    const $btnRemoveOctave = document.getElementById('btn-remove-octave')
+    $btnAddOctave.addEventListener('click', this.addOctaveRenderAction.bind(this))
+    $btnRemoveOctave.addEventListener('click', this.removeOctaveRenderAction.bind(this))
   },
   init () {
     this.data()
@@ -44,20 +51,21 @@ const Piano = {
   insertKeys (keys, before = false) {
     // Helper function to insert keys to the DOM
     var $keysFrag = document.createDocumentFragment()
-    var $previousKey
+    var $saveWrapperKey
     keys.forEach(key => {
       var $key = document.createElement('div')
       $key.dataset.note = key.note
-      if ($previousKey && !this.isWhiteKey(key.note)) {
+      if ($saveWrapperKey && !this.isWhiteKey(key.note)) {
         $key.classList.add('black')
-        $previousKey.appendChild($key)
+        $saveWrapperKey.appendChild($key)
       } else {
         let $wrapperKey = document.createElement('div')
+        $wrapperKey.dataset.octave = key.note.slice(-1)
         $wrapperKey.classList.add('key')
         $key.classList.add('white')
         $wrapperKey.appendChild($key)
         $keysFrag.appendChild($wrapperKey)
-        $previousKey = $wrapperKey
+        $saveWrapperKey = $wrapperKey
       }
     })
     if (before) {
@@ -83,7 +91,6 @@ const Piano = {
       const newOctaveNo = OCTAVES_ORDER[this.curNbOctaves]
       // Insert before if new octave to add is lower than the minimum current octave displayed
       const insertBefore = newOctaveNo < minCurOctaveNo
-      console.log('insert before', insertBefore)
       const keys = OCTAVES_BY_NO[newOctaveNo]
       this.insertKeys(keys, insertBefore)
       this.curNbOctaves++
@@ -92,10 +99,10 @@ const Piano = {
     }
   },
   removeOctaveRenderAction () {
-    if (this.curNbOctaves > 0) {
+    if (this.curNbOctaves > 1) {
       const octaveNoRemove = OCTAVES_ORDER[this.curNbOctaves - 1] // octave number (no) to remove
-      console.log('octave to remove', octaveNoRemove)
-      console.log('current number of octave', this.curNbOctaves)
+      const $keysToRemove = document.querySelectorAll(`[data-octave="${octaveNoRemove}"]`)
+      $keysToRemove.forEach($key => { $key.remove() })
       this.curNbOctaves--
     }
   },
