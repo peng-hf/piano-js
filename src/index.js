@@ -1,3 +1,5 @@
+import debounce from 'debounce'
+
 import '@css/index.scss'
 import CONSTANT from '@/constants'
 import pianoConfig from '@/config'
@@ -15,7 +17,9 @@ const Piano = {
   data () {
     this.isMouseDown = false
     this.curNbOctaves = pianoConfig.initialNbOctaves // Current number of octaves displayed
-    this.$piano = document.querySelector('#piano') // DOM Caching
+    /* DOM caching */
+    this.$piano = document.querySelector('#piano')
+    this.$screen = document.getElementById('screen')
   },
   bindEvents () {
     /* Keybaords events */
@@ -94,6 +98,7 @@ const Piano = {
       const keys = OCTAVES_BY_NO[newOctaveNo]
       this.insertKeys(keys, insertBefore)
       this.curNbOctaves++
+      this.displayText('Add octave')
     } else {
       console.error('Number of octaves rendered reached')
     }
@@ -104,12 +109,21 @@ const Piano = {
       const $keysToRemove = document.querySelectorAll(`[data-octave="${octaveNoRemove}"]`)
       $keysToRemove.forEach($key => { $key.remove() })
       this.curNbOctaves--
+      this.displayText('Remove octave')
     }
+  },
+  clearText: debounce(function () {
+    this.$screen.textContent = 'Play'
+  }, 1500),
+  displayText (text = 'Play') {
+    this.$screen.textContent = text
+    this.clearText()
   },
   playNote (note) {
     const audio = document.createElement('audio')
     audio.src = `./assets/sounds/${note}.mp3`
     audio.play()
+    this.displayText(note)
   },
   isWhiteKey (note) {
     return !note.includes('s')
