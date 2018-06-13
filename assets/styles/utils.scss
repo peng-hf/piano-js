@@ -5,3 +5,22 @@ $border-color: #101010;
 /* Piano buttons */
 $button-color: #4E5253;
 $button-triangle-text: #e2e2e2;
+$button-triangle-border-radius: 5px;
+
+/* Mixins */
+@mixin triangle($direction) {
+  .#{$direction} {
+    height: 0;
+    width: 0;
+    border-width: if($direction == down, 35px 40px 0 40px, 0 40px 35px 40px);
+    border-color: if($direction == down,
+     $button-color transparent transparent transparent, 
+     transparent transparent $button-color transparent
+    );
+    border-style: solid;
+    border-radius: $button-triangle-border-radius;
+    filter: drop-shadow(0 2px 5px rgba(0, 0 , 0, .75));
+    
+  }
+}
+
