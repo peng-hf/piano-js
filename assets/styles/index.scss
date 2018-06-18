@@ -48,15 +48,14 @@ body {
 
     .triangle {
       .text {
-        color: $button-triangle-text;
+        color: #e2e2e2;
         text-align: center;
         text-transform: uppercase;
         font-weight: 600;
         margin: 2px 0;
-        font-size: 16px;
+        font-size: 15px;
         letter-spacing: 1px;
       }
-
       @include triangle(up);
       @include triangle(down);
     }
@@ -70,10 +69,12 @@ body {
     text-transform: uppercase;
     font-weight: 500;
     width: 25%;
-    height: 85px;
+    height: 95px;
     background: #FF8008;  /* fallback for old browsers */
     background: linear-gradient(to right, #FFC837, #FF8008); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     border-radius: 5px;
+    box-shadow: 0 0 5px 3px rgba(0, 0 , 0, .3);
+    border: 8px solid $border-color;
   }
 }
 

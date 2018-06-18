@@ -98,7 +98,6 @@ const Piano = {
       const keys = OCTAVES_BY_NO[newOctaveNo]
       this.insertKeys(keys, insertBefore)
       this.curNbOctaves++
-      this.displayText('Add octave')
     } else {
       console.error('Number of octaves rendered reached')
     }
@@ -109,7 +108,6 @@ const Piano = {
       const $keysToRemove = document.querySelectorAll(`[data-octave="${octaveNoRemove}"]`)
       $keysToRemove.forEach($key => { $key.remove() })
       this.curNbOctaves--
-      this.displayText('Remove octave')
     }
   },
   clearText: debounce(function () {

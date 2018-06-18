@@ -4,8 +4,6 @@ $border-color: #101010;
 
 /* Piano buttons */
 $button-color: #4E5253;
-$button-triangle-text: #e2e2e2;
-$button-triangle-border-radius: 5px;
 
 /* Mixins */
 @mixin triangle($direction) {
@@ -18,9 +16,30 @@ $button-triangle-border-radius: 5px;
      transparent transparent $button-color transparent
     );
     border-style: solid;
-    border-radius: $button-triangle-border-radius;
+    border-radius: 5px;
     filter: drop-shadow(0 2px 5px rgba(0, 0 , 0, .75));
-    
+
+    &:before {
+      content: if($direction == down, "-", "+");
+      font-weight: 600;
+      position: relative;
+      color: rgba(0, 0 , 0, .6);
+      @if $direction == down {
+        bottom: 50px;
+        right: 7px;
+        font-size: 35px;
+      } @else {
+        font-size: 25px;
+        bottom: 2px;
+        right: 6px;
+      }
+    }
+
+    &:active {
+      filter: none;
+      &:before {
+        color: rgba(255, 255, 255, .7);
+      }
+    }
   }
 }
-
