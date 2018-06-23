@@ -13,10 +13,15 @@ const {
   OCTAVES_ORDER
 } = CONSTANT
 
+function isWhiteKey (note) {
+  return !note.includes('s')
+}
+
 const Piano = {
   data () {
     this.isMouseDown = false
     this.curNbOctaves = pianoConfig.initialNbOctaves // Current number of octaves displayed
+    this.isMoving = false // delete/add button animation
     /* DOM caching */
     this.$piano = document.querySelector('#piano')
     this.$screen = document.getElementById('screen')
@@ -30,8 +35,8 @@ const Piano = {
     /* Buttons events */
     const $btnAddOctave = document.getElementById('btn-add-octave')
     const $btnRemoveOctave = document.getElementById('btn-remove-octave')
-    $btnAddOctave.addEventListener('click', this.addOctaveRenderAction.bind(this))
-    $btnRemoveOctave.addEventListener('click', this.removeOctaveRenderAction.bind(this))
+    $btnAddOctave.addEventListener('click', this.renderKeys.bind(this, RENDER_ACTION.ADD_OCTAVE))
+    $btnRemoveOctave.addEventListener('click', this.renderKeys.bind(this, RENDER_ACTION.REMOVE_OCTAVE))
   },
   init () {
     this.data()
@@ -45,21 +50,22 @@ const Piano = {
         this.initRenderAction()
         break
       case RENDER_ACTION.ADD_OCTAVE:
-        this.addOctaveRenderAction()
+        !this.isMoving && this.addOctaveRenderAction()
         break
       case RENDER_ACTION.REMOVE_OCTAVE:
-        this.removeOctaveRenderAction()
+        !this.isMoving && this.removeOctaveRenderAction()
         break
     }
   },
   insertKeys (keys, before = false) {
+    this.isMoving = true
     // Helper function to insert keys to the DOM
     var $keysFrag = document.createDocumentFragment()
     var $saveWrapperKey
-    keys.forEach(key => {
+    keys.forEach((key, idx) => {
       var $key = document.createElement('div')
       $key.dataset.note = key.note
-      if ($saveWrapperKey && !this.isWhiteKey(key.note)) {
+      if ($saveWrapperKey && !isWhiteKey(key.note)) {
         $key.classList.add('black')
         $saveWrapperKey.appendChild($key)
       } else {
@@ -71,12 +77,45 @@ const Piano = {
         $keysFrag.appendChild($wrapperKey)
         $saveWrapperKey = $wrapperKey
       }
+
+      const listenerCondition = before ? idx === 0 : idx === keys.length - 1
+      const delay = (before ? keys.length - idx : idx) * 60
+      listenerCondition && $key.addEventListener('transitionend', function handler () {
+        // Listen to the end of transition of the last key inserted
+        this.isMoving = false
+        // $key.removeEventListener('transitionend', handler) // stop listener
+      }.bind(this))
+
+      // Opacity transition is applied after keys got inserted into the DOM because of setTimeout
+      setTimeout(() => {
+        $key.style.opacity = 1
+      }, delay)
     })
+
     if (before) {
       this.$piano.insertBefore($keysFrag, this.$piano.childNodes[0])
     } else {
       this.$piano.appendChild($keysFrag)
     }
+  },
+  removeKeys (octaveNo, removeFromRight = false) {
+    this.isMoving = true
+    const $keys = document.querySelectorAll(`[data-note*="${octaveNo}"]`) // keys to reduce opacity
+    const $wrapperKeys = document.querySelectorAll(`[data-octave="${octaveNo}"]`) // wrapper keys to remove
+    Array.from($keys).forEach(($key, idx) => {
+      const delay = (removeFromRight ? $keys.length - idx : idx) * 60
+      const listenerCondition = removeFromRight ? idx === 0 : idx === $keys.length - 1
+      listenerCondition && $key.addEventListener('transitionend', function handler () {
+        // If transition is finished for the first or last key of the octave (depend on removeFromRight), delete all wrapperKeys from DOM
+        Array.from($wrapperKeys).forEach($wKey => { $wKey.remove() })
+        this.isMoving = false
+        $key.removeEventListener('transitionend', handler) // stop listener
+      }.bind(this))
+
+      setTimeout(() => {
+        $key.style.opacity = 0
+      }, delay)
+    })
   },
   initRenderAction () {
     // Generate keys and add to DOM
@@ -103,10 +142,10 @@ const Piano = {
     }
   },
   removeOctaveRenderAction () {
-    if (this.curNbOctaves > 1) {
-      const octaveNoRemove = OCTAVES_ORDER[this.curNbOctaves - 1] // octave number (no) to remove
-      const $keysToRemove = document.querySelectorAll(`[data-octave="${octaveNoRemove}"]`)
-      $keysToRemove.forEach($key => { $key.remove() })
+    if (this.curNbOctaves > pianoConfig.minOctaveDisplayed) {
+      const octaveNo = OCTAVES_ORDER[this.curNbOctaves - 1] // octave number (no) to remove
+      const fromRight = octaveNo > 4 // Delete keys from right if octave no to remove is greater than the middle octave no
+      this.removeKeys(octaveNo, fromRight)
       this.curNbOctaves--
     }
   },
@@ -122,9 +161,6 @@ const Piano = {
     audio.src = `./assets/sounds/${note}.mp3`
     audio.play()
     this.displayText(note)
-  },
-  isWhiteKey (note) {
-    return !note.includes('s')
   },
   mouseHandler (evt) {
     const $target = evt.target
@@ -159,4 +195,6 @@ const Piano = {
   }
 }
 
-Piano.init()
+document.addEventListener('DOMContentLoaded', event => {
+  Piano.init()
+})
