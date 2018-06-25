@@ -80,11 +80,16 @@ const Piano = {
 
       const listenerCondition = before ? idx === 0 : idx === keys.length - 1
       const delay = (before ? keys.length - idx : idx) * 60
-      listenerCondition && $key.addEventListener('transitionend', function handler () {
+      var handlerRef
+      const handler = () => {
         // Listen to the end of transition of the last key inserted
         this.isMoving = false
-        // $key.removeEventListener('transitionend', handler) // stop listener
-      }.bind(this))
+        // handleRef is use to reference the same function when removing listener
+        // note: bind create a new ref
+        $key.removeEventListener('transitionend', handlerRef)
+      }
+      handlerRef = handler.bind(this)
+      listenerCondition && $key.addEventListener('transitionend', handlerRef)
 
       // Opacity transition is applied after keys got inserted into the DOM because of setTimeout
       setTimeout(() => {
@@ -105,12 +110,15 @@ const Piano = {
     Array.from($keys).forEach(($key, idx) => {
       const delay = (removeFromRight ? $keys.length - idx : idx) * 60
       const listenerCondition = removeFromRight ? idx === 0 : idx === $keys.length - 1
-      listenerCondition && $key.addEventListener('transitionend', function handler () {
+      var handlerRef
+      const handler = () => {
         // If transition is finished for the first or last key of the octave (depend on removeFromRight), delete all wrapperKeys from DOM
         Array.from($wrapperKeys).forEach($wKey => { $wKey.remove() })
         this.isMoving = false
-        $key.removeEventListener('transitionend', handler) // stop listener
-      }.bind(this))
+        $key.removeEventListener('transitionend', handlerRef) // stop listener
+      }
+      handlerRef = handler.bind(this)
+      listenerCondition && $key.addEventListener('transitionend', handlerRef)
 
       setTimeout(() => {
         $key.style.opacity = 0
