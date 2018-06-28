@@ -79,7 +79,7 @@ const Piano = {
       }
 
       const listenerCondition = before ? idx === 0 : idx === keys.length - 1
-      const delay = (before ? keys.length - idx : idx) * 60
+      const delay = (before ? keys.length - idx : idx) * 50
       var handlerRef
       const handler = () => {
         // Listen to the end of transition of the last key inserted
@@ -108,7 +108,7 @@ const Piano = {
     const $keys = document.querySelectorAll(`[data-note*="${octaveNo}"]`) // keys to reduce opacity
     const $wrapperKeys = document.querySelectorAll(`[data-octave="${octaveNo}"]`) // wrapper keys to remove
     Array.from($keys).forEach(($key, idx) => {
-      const delay = (removeFromRight ? $keys.length - idx : idx) * 60
+      const delay = (removeFromRight ? $keys.length - idx : idx) * 50
       const listenerCondition = removeFromRight ? idx === 0 : idx === $keys.length - 1
       var handlerRef
       const handler = () => {
