@@ -1,6 +1,6 @@
 import debounce from 'debounce'
 
-import '@css/index.scss'
+import '@assets/styles/index.scss'
 import CONSTANT from '@/constants'
 import pianoConfig from '@/config'
 
@@ -166,7 +166,7 @@ const Piano = {
   },
   playNote (note) {
     const audio = document.createElement('audio')
-    audio.src = `./assets/sounds/${note}.mp3`
+    audio.src = require(`@assets/sounds/${note}.mp3`)
     audio.play()
     this.displayText(note)
   },

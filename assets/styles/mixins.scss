@@ -17,13 +17,13 @@
       position: relative;
       color: rgba(0, 0 , 0, .6);
       @if $direction == down {
-        bottom: 43px;
-        right: 5px;
+        bottom: 50px;
+        right: 7px;
         font-size: 35px;
       } @else {
         font-size: 25px;
-        top: 4px;
-        right: 6px;
+        top: 1px;
+        right: 7px;
       }
     }
 

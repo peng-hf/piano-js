@@ -1,8 +1,11 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
 const UglifyJSPlugin = require('uglify-js-plugin')
-const dev = process.env.NODE_ENV === 'dev'
 const webpack = require('webpack')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+const dev = process.env.NODE_ENV === 'dev'
 
 let config = {
   entry: {
@@ -10,14 +13,13 @@ let config = {
   },
   output: {
     path: path.resolve('dist'),
-    publicPath: '/dist/',
     filename: '[name].bundle.js'
   },
   devtool: dev ? 'eval-source-map' : false, // enhance the debugging process
   resolve: {
     alias: {
       '@': path.resolve('src'),
-      '@css': path.resolve('assets/styles')
+      '@assets': path.resolve('assets')
     }
   },
   module: {
@@ -54,12 +56,11 @@ let config = {
         })
       },
       {
-        test: /\.(ttf|eot|woff|woff2)$/,
+        test: /\.(ttf|eot|woff|woff2|mp3)$/,
         use: {
           loader: 'file-loader',
           options: {
-            name: '[name].[ext]',
-            outputPath: '/fonts/'
+            name: '[path][name].[ext]'
           }
         }
       }
@@ -69,6 +70,11 @@ let config = {
     new ExtractTextPlugin({
       filename: '[name].styles.css',
       disable: dev // disable extract css to a file on dev mode
+    }),
+    new CleanWebpackPlugin(['dist']),
+    new HtmlWebpackPlugin({
+      title: 'Piano JS',
+      template: './index.html'
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
