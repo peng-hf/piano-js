@@ -5,8 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Piano JS</title>
+  <style>
+    #cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 2;
+      background: red;
+    }
+  </style>
 </head>
 <body>
+  <div id="cover"></div>
   <div class="wrapper">
     <div class="dashboard">
       <div class="buttons"></div>
@@ -22,5 +34,12 @@
     <div id="piano" class="piano"></div>
     <div class="bar"></div>
   </div>
+  <script>
+    window.onload = function () {
+      // load event is triggered when the all ressources are loaded (scripts, styles..)
+      document.querySelector('#cover').style.visibility = 'hidden'
+
+    }
+  </script>
 </body>
 </html>

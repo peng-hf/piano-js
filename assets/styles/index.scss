@@ -15,10 +15,10 @@ html, body {
 
 body {
   background: $page-background-color; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  padding: 20px;
 }
 
 .wrapper {
+  margin: 20px;
   border-width: 0 50px;
   border-color: $black_1;
   border-style: solid;

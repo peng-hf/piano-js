@@ -203,6 +203,4 @@ const Piano = {
   }
 }
 
-document.addEventListener('DOMContentLoaded', event => {
-  Piano.init()
-})
+Piano.init()

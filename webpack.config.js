@@ -1,21 +1,18 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
-const UglifyJSPlugin = require('uglify-js-plugin')
 const webpack = require('webpack')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const dev = process.env.NODE_ENV === 'dev'
-
-let config = {
+const config = (_, argv) => ({
   entry: {
     app: './src/index.js'
   },
   output: {
-    path: path.resolve('dist'),
-    filename: '[name].bundle.js'
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[hash].js'
   },
-  devtool: dev ? 'eval-source-map' : false, // enhance the debugging process
+  devtool: argv.mode === 'development' ? 'eval-source-map' : false, // enhance the debugging process
   resolve: {
     alias: {
       '@': path.resolve('src'),
@@ -35,22 +32,15 @@ let config = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          presets: [
-            ['env', {
-              targets: {
-                // Ship native es6 on last 2 version of all browser and safari >= 7
-                'browsers': ['last 2 versions', 'safari >= 7']
-              }
-            }]
-          ]
+          presets: ['@babel/preset-env']
         }
       },
       {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader', // If extraction fails (on dev mode for ex), use style-loader
+          fallback: 'style-loader', // If css loader extraction fails (on dev mode), fallback to style-loader
           use: [
-            { loader: 'css-loader', options: { minimize: !dev } },
+            { loader: 'css-loader', options: { minimize: argv.mode !== 'development' } },
             'sass-loader'
           ]
         })
@@ -60,21 +50,21 @@ let config = {
         use: {
           loader: 'file-loader',
           options: {
-            name: '[path][name].[ext]'
+            name: '[path][hash].[ext]'
           }
         }
       }
     ]
   },
   plugins: [
-    new ExtractTextPlugin({
-      filename: '[name].styles.css',
-      disable: dev // disable extract css to a file on dev mode
-    }),
     new CleanWebpackPlugin(['dist']),
+    new ExtractTextPlugin({
+      filename: '[name].[hash].css',
+      disable: argv.mode === 'development' // disable extract css to a file on dev mode
+    }),
     new HtmlWebpackPlugin({
       title: 'Piano JS',
-      template: './index.html'
+      template: path.resolve(__dirname, 'index.html')
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
@@ -83,12 +73,6 @@ let config = {
     overlay: true, // show errors in the console term
     hot: true
   }
-}
-
-if (!dev) {
-  config.plugins.push(
-    new UglifyJSPlugin()
-  )
-}
+})
 
 module.exports = config
