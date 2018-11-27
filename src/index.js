@@ -1,8 +1,10 @@
+import 'babel-polyfill'
 import debounce from 'debounce'
 
 import '@assets/styles/index.scss'
 import CONSTANT from '@/constants'
 import pianoConfig from '@/config'
+import preloadSounds from '@/preload'
 
 // Nb (count) != no (numero)
 
@@ -18,7 +20,8 @@ function isWhiteKey (note) {
 }
 
 const Piano = {
-  data () {
+  data (sounds) {
+    this.sounds = sounds
     this.isMouseDown = false
     this.curNbOctaves = pianoConfig.initialNbOctaves // Current number of octaves displayed
     this.isMoving = false // delete/add button animation
@@ -38,8 +41,8 @@ const Piano = {
     $btnAddOctave.addEventListener('click', this.renderKeys.bind(this, RENDER_ACTION.ADD_OCTAVE))
     $btnRemoveOctave.addEventListener('click', this.renderKeys.bind(this, RENDER_ACTION.REMOVE_OCTAVE))
   },
-  init () {
-    this.data()
+  init (sounds) {
+    this.data(sounds)
     this.bindEvents()
     this.renderKeys(RENDER_ACTION.INIT)
   },
@@ -166,7 +169,7 @@ const Piano = {
   },
   playNote (note) {
     const audio = document.createElement('audio')
-    audio.src = require(`@assets/sounds/${note}.mp3`)
+    audio.src = this.sounds[note]
     audio.play()
     this.displayText(note)
   },
@@ -203,4 +206,8 @@ const Piano = {
   }
 }
 
-Piano.init()
+document.addEventListener('DOMContentLoaded', () => {
+  preloadSounds().then(sounds => {
+    Piano.init(sounds)
+  })
+})

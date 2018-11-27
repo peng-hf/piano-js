@@ -1,6 +1,7 @@
 {
-    "extends": "standard",
-    "globals": {
-        "html": true
-    }
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "allowImportExportEverywhere": true
+    },
+    "extends": "standard"
 }
