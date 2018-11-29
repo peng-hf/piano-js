@@ -56,7 +56,10 @@ function getConfig (_, argv) {
     plugins: [
       new HtmlWebpackPlugin({
         title: 'Piano JS',
-        template: path.resolve(__dirname, 'index.html')
+        template: path.resolve(__dirname, 'index.html'),
+        // Inject main bundle script into headers to load and apply all css styles before browser
+        // start parsing body content during webpack dev mode
+        inject: argv.mode === 'development' ? 'head' : 'body'
       })
     ]
   }

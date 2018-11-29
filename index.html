@@ -7,20 +7,22 @@
   <title>Piano JS</title>
 </head>
 <body>
-  <div class="wrapper">
-    <div class="dashboard">
-      <div class="buttons"></div>
-      <div class="screen" id="screen">Play</div>
-      <div class="buttons">
-        <div class="triangle">
-          <div class="up" id="btn-add-octave"></div>
-          <div class="text">Octave</div>
-          <div class="down" id="btn-remove-octave"></div>
+  <div id="app">
+    <div id="loader"></div>
+    <div id="piano">
+      <div class="dashboard">
+        <div class="buttons"></div>
+        <div id="screen">Play</div>
+        <div class="buttons">
+          <div class="triangle">
+            <div class="up" id="btn-add-octave"></div>
+            <div class="text">Octave</div>
+            <div class="down" id="btn-remove-octave"></div>
+          </div>
         </div>
       </div>
+      <div id="keys"></div>
     </div>
-    <div id="piano" class="piano"></div>
-    <div class="bar"></div>
   </div>
 </body>
 </html>

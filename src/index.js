@@ -21,18 +21,21 @@ function isWhiteKey (note) {
 
 const Piano = {
   data (sounds) {
-    this.sounds = sounds
+    this.cachedSounds = sounds
     this.isMouseDown = false
     this.curNbOctaves = pianoConfig.initialNbOctaves // Current number of octaves displayed
     this.isMoving = false // delete/add button animation
+
     /* DOM caching */
-    this.$piano = document.querySelector('#piano')
+    this.$app = document.getElementById('app')
+    this.$piano = document.getElementById('piano')
+    this.$keys = document.getElementById('keys')
     this.$screen = document.getElementById('screen')
   },
   bindEvents () {
     /* Keybaords events */
     ['mousedown', 'mouseup', 'mouseover', 'mouseout'].forEach(evtName => {
-      this.$piano.addEventListener(evtName, this.mouseHandler.bind(this))
+      this.$keys.addEventListener(evtName, this.mouseHandler.bind(this))
     })
 
     /* Buttons events */
@@ -43,8 +46,12 @@ const Piano = {
   },
   init (sounds) {
     this.data(sounds)
+    this.$app.classList.add('loaded')
     this.bindEvents()
-    this.renderKeys(RENDER_ACTION.INIT)
+
+    setTimeout(() => { // delay to render keys as loader is fading-out
+      this.renderKeys(RENDER_ACTION.INIT)
+    }, 600)
   },
 
   renderKeys (action) {
@@ -101,9 +108,9 @@ const Piano = {
     })
 
     if (before) {
-      this.$piano.insertBefore($keysFrag, this.$piano.childNodes[0])
+      this.$keys.insertBefore($keysFrag, this.$keys.childNodes[0])
     } else {
-      this.$piano.appendChild($keysFrag)
+      this.$keys.appendChild($keysFrag)
     }
   },
   removeKeys (octaveNo, removeFromRight = false) {
@@ -129,7 +136,7 @@ const Piano = {
     })
   },
   initRenderAction () {
-    // Generate keys and add to DOM
+    // Generate keys and insert them into the DOM
     const keys = (function () { // arrow function can also be an option to prevent binding current context
       const octaves = OCTAVES_ORDER.slice(0, this.curNbOctaves)
       octaves.sort()
@@ -169,7 +176,7 @@ const Piano = {
   },
   playNote (note) {
     const audio = document.createElement('audio')
-    audio.src = this.sounds[note]
+    audio.src = this.cachedSounds[note]
     audio.play()
     this.displayText(note)
   },
