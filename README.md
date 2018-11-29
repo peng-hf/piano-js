@@ -1,12 +1,12 @@
 # Piano JS
 
-Functionnal piano made for the pianist only (joke)
+Functionnal piano made for the pianists only (joke)
 
 [Demo here](http://piano-js.lyfing.fr)
 
 ## Motivation
 
-For Vanilla JS learning purpose and challenging myself, I've decided to build a simple virtual piano on the web.
+For Vanilla JS learning purpose and challenging myself, I have decided to build a simple virtual piano on the web.
 
 
 ## Installation
@@ -26,10 +26,10 @@ $ npm run build # Build and ouput assets in dist folder
 - Webpack v4
 
 
-## Optimization with Webpack
+## Optimizations with Webpack
 In `src/preload.js`
 - Leverage **webpack dynamic import** feature to preload piano key sounds in the browser before rendering the piano. 
-- Encode all mp3 key sounds into base 64 then generate a single-chunk containing all sounds using 'lazy-once'` mode (Avoid multiple requests made by the browser)
+- Encode all mp3 key sounds into base 64 then generate a separated single-chunk containing all sounds using webpack `lazy-once` mode (Avoid multiple requests made by the browser)
 
 ## Features
 - Play up to 6 octaves (N°2 to N°6)
@@ -38,5 +38,5 @@ In `src/preload.js`
 - Sounds are preloaded with a loading animation before rendering the piano
 
 ## Limitations
-- App is not responsive. Displaying on mobile screen is not adapted.
+- App is not responsive
 - No keyboard integration for piano keys
