@@ -1,6 +1,6 @@
 # Piano JS
 
-Functionnal piano made for the pianists only (joke)
+Functionnal piano made for the pianists only.
 
 [Demo here](http://piano-js.lyfing.fr)
 
