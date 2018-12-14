@@ -57,8 +57,8 @@ function getConfig (_, argv) {
       new HtmlWebpackPlugin({
         title: 'Piano JS',
         template: path.resolve(__dirname, 'index.html'),
-        // During dev mode, inject and load all css styles in headers caused by style-loader before browser
-        // start parsing body content
+        // On dev mode, main bundle script is injected into html headers to allow css from style-loader
+        // to be loaded immediatly before browser start parsing body content
         inject: argv.mode === 'development' ? 'head' : 'body'
       })
     ]
@@ -75,9 +75,7 @@ function getConfig (_, argv) {
         { loader: 'sass-loader' }
       ]
     })
-    config.plugins = config.plugins.concat([
-      new webpack.HotModuleReplacementPlugin()
-    ])
+    config.plugins.push(new webpack.HotModuleReplacementPlugin())
     config.devServer = {
       contentBase: __dirname,
       overlay: true, // show errors in the console term
@@ -95,12 +93,9 @@ function getConfig (_, argv) {
         ]
       })
     })
-    config.plugins = config.plugins.concat([
-      new CleanWebpackPlugin(['dist']),
-      new ExtractTextPlugin({ filename: '[name].[hash].css' })
-    ])
+    config.plugins.push(new CleanWebpackPlugin(['dist']))
+    config.plugins.push(new ExtractTextPlugin({ filename: '[name].[hash].css' }))
   }
-
   return config
 }
 
