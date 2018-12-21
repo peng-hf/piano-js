@@ -72,6 +72,7 @@ body {
   background: transparent;
   opacity: 0;
   transition: opacity .25s .6s linear;
+  cursor: default;
 
   &::after {
     display: block;
@@ -136,6 +137,7 @@ body {
   .key {
     flex-grow: 1;
     position: relative;
+    cursor: pointer;
 
     .white {
       background: $white-key-background;

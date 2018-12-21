@@ -10,6 +10,7 @@
     border-style: solid;
     border-radius: 5px;
     filter: drop-shadow(0 2px 5px rgba(0, 0 , 0, .75));
+    cursor: pointer;
 
     &:before {
       content: if($direction == down, "-", "+");

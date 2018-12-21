@@ -3,27 +3,15 @@ const MAX_OCTAVE_NO = 6
 
 function getOctavesByNo () {
   // Octaves generator function
-  const OCTAVE_TEMPLATE = [
-    { note: 'C' },
-    { note: 'Cs' },
-    { note: 'D' },
-    { note: 'Ds' },
-    { note: 'E' },
-    { note: 'F' },
-    { note: 'Fs' },
-    { note: 'G' },
-    { note: 'Gs' },
-    { note: 'A' },
-    { note: 'As' },
-    { note: 'B' }
-  ]
+  const OCTAVE_TEMPLATE = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B']
   var res = {}
 
   for (let octaveNo = MIN_OCTAVE_NO; octaveNo <= MAX_OCTAVE_NO; ++octaveNo) {
-    res[octaveNo] = OCTAVE_TEMPLATE.map(pianoKey => ({
-      note: pianoKey.note + octaveNo
+    res[octaveNo] = OCTAVE_TEMPLATE.map(note => ({
+      note: note + octaveNo
     }))
   }
+
   return res
 }
 
