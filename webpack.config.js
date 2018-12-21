@@ -1,17 +1,20 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 function getConfig (_, argv) {
+  const devMode = argv.mode !== 'production'
   const common = {
     entry: {
       app: './src/index.js'
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: '[name].[hash].js'
+      filename: devMode ? '[name].js' : '[name].[hash].js'
     },
     resolve: {
       alias: {
@@ -37,6 +40,14 @@ function getConfig (_, argv) {
           }
         },
         {
+          test: /.*\.scss/,
+          use: [
+            devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            'sass-loader'
+          ]
+        },
+        {
           test: /\.(ttf|eot|woff|woff2)$/,
           use: {
             loader: 'file-loader',
@@ -56,45 +67,36 @@ function getConfig (_, argv) {
     plugins: [
       new HtmlWebpackPlugin({
         title: 'Piano JS',
-        template: path.resolve(__dirname, 'index.html'),
-        // On dev mode, main bundle script is injected into html headers to allow css from style-loader
-        // to be loaded immediatly before browser start parsing body content
-        inject: argv.mode === 'development' ? 'head' : 'body'
+        template: path.resolve(__dirname, 'index.html')
       })
     ]
   }
 
   const config = Object.assign({}, common)
-  if (argv.mode === 'development') {
+  if (devMode) {
     config.devtool = 'eval-source-map' // enhance the debugging process
-    config.module.rules.push({
-      test: /\.scss$/,
-      use: [
-        { loader: 'style-loader' },
-        { loader: 'css-loader' },
-        { loader: 'sass-loader' }
-      ]
-    })
-    config.plugins.push(new webpack.HotModuleReplacementPlugin())
+    config.plugins = config.plugins.concat([new webpack.HotModuleReplacementPlugin()])
     config.devServer = {
       contentBase: __dirname,
       overlay: true, // show errors in the console term
       hot: true
     }
-  }
-
-  if (argv.mode === 'production') {
-    config.module.rules.push({
-      test: /\.scss$/,
-      use: ExtractTextPlugin.extract({
-        use: [
-          { loader: 'css-loader', options: { minimize: true } },
-          'sass-loader'
-        ]
-      })
-    })
-    config.plugins.push(new CleanWebpackPlugin(['dist']))
-    config.plugins.push(new ExtractTextPlugin({ filename: '[name].[hash].css' }))
+  } else { // Production mode
+    config.plugins = config.plugins.concat([
+      new CleanWebpackPlugin(['dist']),
+      new MiniCssExtractPlugin({ filename: '[name].[hash].css' })
+    ])
+    // Overrides the defaults provided by webpack, must specify JS minimizer
+    config.optimization = {
+      minimizer: [
+        new UglifyJsPlugin({
+          cache: true,
+          parallel: true,
+          sourceMap: true
+        }),
+        new OptimizeCSSAssetsPlugin({}) // Minimize css
+      ]
+    }
   }
   return config
 }
