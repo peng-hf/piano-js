@@ -213,8 +213,7 @@ const Piano = {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  preloadSounds().then(sounds => {
-    Piano.init(sounds)
-  })
+document.addEventListener('DOMContentLoaded', async () => {
+  const cachedSounds = await preloadSounds()
+  Piano.init(cachedSounds)
 })

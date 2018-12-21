@@ -2,7 +2,7 @@ const MIN_OCTAVE_NO = 2
 const MAX_OCTAVE_NO = 6
 
 function getOctavesByNo () {
-  // Octaves generation function
+  // Octaves generator function
   const OCTAVE_TEMPLATE = [
     { note: 'C' },
     { note: 'Cs' },

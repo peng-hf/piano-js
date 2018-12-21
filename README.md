@@ -40,4 +40,4 @@ In `src/preload.js`
 ## Limitations
 - App is not responsive
 - No keyboard integration for piano keys
-- Not supported on Safari browser (Causing slow/delay audio playback on piano key press)
+- Not supported on Safari browser (Causing slow/delay audio playback on piano key pressing)
