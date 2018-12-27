@@ -78,7 +78,9 @@ function getConfig (_, argv) {
   const config = Object.assign({}, common)
   if (devMode) {
     config.devtool = 'eval-source-map' // enhance the debugging process
-    config.plugins = config.plugins.concat([new webpack.HotModuleReplacementPlugin()])
+    config.plugins = config.plugins.concat([
+      new webpack.HotModuleReplacementPlugin()
+    ])
     config.devServer = {
       contentBase: __dirname,
       overlay: true, // show errors in the console term
@@ -89,7 +91,8 @@ function getConfig (_, argv) {
       new CleanWebpackPlugin(['dist']),
       new MiniCssExtractPlugin({ filename: '[name].[hash].css' })
     ])
-    // Overrides the defaults provided by webpack, must specify JS minimizer
+    // Must specify JS minimizer as overiding the defaults provided by webpack
+    // to add css minimizer
     config.optimization = {
       minimizer: [
         new UglifyJsPlugin({
