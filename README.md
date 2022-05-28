@@ -2,7 +2,7 @@
 
 Functionnal piano made for the pianists only.
 
-[Demo here](http://piano-js.lyfing.fr)
+[Demo here](http://piano-js.lyfing.dev)
 
 ## Motivation
 
