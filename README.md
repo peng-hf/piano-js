@@ -25,6 +25,9 @@ $ npm run build # Build and ouput assets in dist folder
 - Vanilla JS (ES6)
 - Webpack v4
 
+# Requirements
+- Node 14
+
 
 ## Optimizations with Webpack
 In `src/preload.js`

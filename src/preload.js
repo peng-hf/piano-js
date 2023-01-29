@@ -13,7 +13,7 @@ async function preloadSounds () {
     // Generates a single lazy-loadable chunk using lazy-once mode for dynamic import
     const { default: data64 } = await import(
       /* webpackMode: "lazy-once", webpackChunkName: "sounds" */
-      `@assets/sounds/${note}.mp3`
+      '@assets/sounds/' + note + '.mp3'
     )
     cache[note] = data64
   }
